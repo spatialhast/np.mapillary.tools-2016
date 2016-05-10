@@ -16,9 +16,9 @@ CREATE TABLE ncp_buffer AS SELECT a.name, a.boundary, ST_Buffer( ST_Transform(a.
 ALTER TABLE ncp_buffer ALTER COLUMN geom TYPE Geometry(Geometry,4326) USING ST_Transform(geom,4326);
 --
 --
---CREATE 'data_first_time' TABLE WITH 'gpxtime' BETWEEN '2015-09-15 - 2015-12-15'
+--CREATE 'data_first_time' TABLE WITH 'gpxtime' BETWEEN '2016-01-01 - 2016-12-18'
 DROP TABLE IF EXISTS data_first_time;
-CREATE TABLE data_first_time AS SELECT * FROM union_gpx_data WHERE gpxtime BETWEEN '2015-09-15 00:00:00'::timestamp AND '2015-12-15 23:59:59'::timestamp ORDER BY id DESC;
+CREATE TABLE data_first_time AS SELECT * FROM union_gpx_data WHERE gpxtime BETWEEN '2016-01-01 00:00:00'::timestamp AND '2016-12-18 23:59:59'::timestamp ORDER BY id DESC;
 --
 --CREATE 'data_first_in_np' WITH POINTS IN NP 
 DROP TABLE IF EXISTS data_first_in_np;
@@ -34,14 +34,14 @@ DROP TABLE IF EXISTS table_count_first;
 CREATE TABLE table_count_first AS SELECT name, paname, COUNT(*) FROM data_first_in_np GROUP BY name, paname ORDER BY count;
 --
 --CREATE JSON DATA
-COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_first GROUP BY name ORDER BY count DESC) t) to '/home/hast/np.mapillary.tools/data/table_count_first.json';
+COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_first GROUP BY name ORDER BY count DESC) t) to '/home/un/np.mapillary.tools-2016/data/table_count_first.json';
 --COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_first GROUP BY name ORDER BY count DESC) t) to 'D:\np.mapillary.tools\data\table_count_first.json';
 --
 --
 --
---CREATE 'data_first_time' TABLE WITH 'gpxtime' BETWEEN '2010-01-01 - 2015-12-15'
+--CREATE 'data_first_time' TABLE WITH 'gpxtime' BETWEEN '2010-01-01 - 2016-12-18'
 DROP TABLE IF EXISTS data_second_time;
-CREATE TABLE data_second_time AS SELECT * FROM union_gpx_data WHERE gpxtime BETWEEN '2010-01-01 00:00:00'::timestamp AND '2015-12-15 23:59:59'::timestamp ORDER BY id DESC;
+CREATE TABLE data_second_time AS SELECT * FROM union_gpx_data WHERE gpxtime BETWEEN '2010-01-01 00:00:00'::timestamp AND '2016-12-18 23:59:59'::timestamp ORDER BY id DESC;
 --
 --CREATE 'data_second_in_np' WITH POINTS IN NP
 DROP TABLE IF EXISTS data_second_in_np;
@@ -56,7 +56,7 @@ FROM ncp_buffer p WHERE ST_Contains(p.geom, points.geom);
 DROP TABLE IF EXISTS table_count_second;
 CREATE TABLE table_count_second AS SELECT name, paname, COUNT(*) FROM data_second_in_np GROUP BY name, paname ORDER BY count;
 --
-COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_second GROUP BY name ORDER BY count DESC) t) to '/home/hast/np.mapillary.tools/data/table_count_second.json';
+COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_second GROUP BY name ORDER BY count DESC) t) to '/home/un/np.mapillary.tools-2016/data/table_count_second.json';
 --COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_second GROUP BY name ORDER BY count DESC) t) to 'D:\np.mapillary.tools\data\table_count_second.json';
 --
 --
@@ -78,10 +78,10 @@ BEGIN
     EXECUTE 'CREATE TABLE ' || $3 || '
         (
           ogc_fid integer,
-          wkb_geometry geometry(Point,4326),
           "time" timestamp with time zone,
           name character varying,
-          "desc" character varying
+          "desc" character varying,
+          wkb_geometry geometry(Point,4326)
         )';
     FOR row IN
         SELECT
