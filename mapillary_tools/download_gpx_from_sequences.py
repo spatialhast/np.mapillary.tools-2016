@@ -13,19 +13,15 @@ import argparse
 this scripts is a fast way to download all your GPS traces from
 the sequences uploaded to mapillary.
 and you could do what you want with yours GPS traces. :)
-
 Script to download images using the Mapillary image search API.
-
 by danilo@lacosox.org based on download_images.py
 14/10/2015 
-
 usage: download_gpx_from_sequences.py [-h]
                                       [-r min_lat max_lat min_lon max_long]
                                       [-m MAXRESULTS] [-u USERNAME]
                                       [-d1 STARTDATE] [-d2 ENDDATE]
 ranges:
 ========
-
 min_lat = -90 to 90
 max_lat = -90 to 90
 min_lon = -180 to 180
@@ -34,7 +30,6 @@ maxresults = numeric >= 0
 filter_by_user_name = string
 Limit_Start_Date = a date informat YYYMMDD ex:20150101 default hour: 00:00
 Limit_End_Date = a date informat YYYMMDD ex:20151231 default hour: 23:59
-
 '''
 
 MAPILLARY_API_IM_SEARCH_URL = 'https://a.mapillary.com/v2/search/s/ul?'
@@ -44,18 +39,21 @@ MAX_LAT_G = 90
 MIN_LON_G = -180
 MAX_LON_G = 180
 MAX_RESULTS = 10 #default value only for test, please specify your limit
-BASE_DIR = '_gpx/'
+BASE_DIR = '_gpx/' ##### changed @spatialhast
 USER_FILTER=''
 DEFAULT_START_TIME = '20000101' #2000-01-01 
 DEFAULT_END_TIME =  '21001231' #2100-12-31
 
+#I create a new aplication for get this client_id.
+#CLIENT_ID = 'dTBiWGgweEdleXJhVVBmOFNfVVRxZzpkYThkNzBkYTI3ZGNhMGI1'
+
 #default Mapillary web client ID, only for test, may you need create a new application and get a new id to replace it
-CLIENT_ID = 'WTlZaVBSWmxRX3dQODVTN2gxWVdGUTpkMjliZGQwZWI2MTgyMjk0'
+# i'm not sure if a good idea use this ID
+CLIENT_ID = 'WTlZaVBSWmxRX3dQODVTN2gxWVdGUTpkMjliZGQwZWI2MTgyMjk0' ##### changed @spatialhast
 
 START_TIME = time.time()
 LOG_FILE = "downloaded_"+time.strftime("%Y%m%d",time.localtime(START_TIME))+".txt"
-#MAX_ATTEMPTS = 10
-MAX_ATTEMPTS = 1
+MAX_ATTEMPTS = 10
 START_ESTIMATED_TIME_AFTER = 2 #start calc estimated time after this count.
 
 START_TIME_1970 = datetime.datetime(1970,1,1)
@@ -92,7 +90,6 @@ def query_search_api(client_id,min_lat, max_lat, min_lon, max_lon, max_results, 
 def download_gpx(query, path):
     '''
     Download files in query result to path.
-
     Return list of downloaded  with lat,lon.
    
     '''

@@ -5,16 +5,11 @@ import glob, os
 this scripts is a fast way to join a lot of GPX files downloaded from mapillary
 if you use download_gpx_from_sequences.py , this is your second step for join 
 all in just one file. 
-
 use this script as: 
-
 python join_gpx_mapillary_files.py [gpx_directory] [outputfile.gpx]
-
 ex: python join_gpx_mapillary_files.py gpx_from_sequences salida.gpx
-
 by danilo@lacosox.org
 15/10/2015 
-
 '''
 
 HEAD_FILE="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n \

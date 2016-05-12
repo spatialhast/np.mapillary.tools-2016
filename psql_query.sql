@@ -34,35 +34,12 @@ DROP TABLE IF EXISTS table_count_first;
 CREATE TABLE table_count_first AS SELECT name, paname, COUNT(*) FROM data_first_in_np GROUP BY name, paname ORDER BY count;
 --
 --CREATE JSON DATA
-COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_first GROUP BY name ORDER BY count DESC) t) to '/home/un/np.mapillary.tools-2016/data/table_count_first.json';
---COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_first GROUP BY name ORDER BY count DESC) t) to 'D:\np.mapillary.tools\data\table_count_first.json';
+COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_first GROUP BY name ORDER BY count DESC) t) to '/home/hast/np.mapillary.tools-2016/data/mapillary_data.json';
+--COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_first GROUP BY name ORDER BY count DESC) t) to 'D:\np.mapillary.tools-2016\data\mapillary_data.json';
 --
---
---
---CREATE 'data_first_time' TABLE WITH 'gpxtime' BETWEEN '2010-01-01 - 2016-12-18'
-DROP TABLE IF EXISTS data_second_time;
-CREATE TABLE data_second_time AS SELECT * FROM union_gpx_data WHERE gpxtime BETWEEN '2010-01-01 00:00:00'::timestamp AND '2016-12-18 23:59:59'::timestamp ORDER BY id DESC;
---
---CREATE 'data_second_in_np' WITH POINTS IN NP
-DROP TABLE IF EXISTS data_second_in_np;
-CREATE TABLE data_second_in_np AS SELECT a.* FROM data_second_time a, ncp_buffer b WHERE ST_Intersects(a.geom, b.geom);
---
---ADD NP NAMES TO POINTS
-ALTER TABLE data_second_in_np ADD COLUMN paname character varying; 
-UPDATE data_second_in_np points SET paname = p.name 
-FROM ncp_buffer p WHERE ST_Contains(p.geom, points.geom);
---
---CREATE TABLE WITH STATISTICS
-DROP TABLE IF EXISTS table_count_second;
-CREATE TABLE table_count_second AS SELECT name, paname, COUNT(*) FROM data_second_in_np GROUP BY name, paname ORDER BY count;
---
-COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_second GROUP BY name ORDER BY count DESC) t) to '/home/un/np.mapillary.tools-2016/data/table_count_second.json';
---COPY (SELECT array_to_json(array_agg(row_to_json(t))) FROM (SELECT  name, array_agg(paname) AS paname, SUM(count) AS count FROM table_count_second GROUP BY name ORDER BY count DESC) t) to 'D:\np.mapillary.tools\data\table_count_second.json';
 --
 --
 SELECT footgun('public', 'gpx_user_');
-
-
 
 
 /*
