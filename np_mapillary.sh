@@ -28,7 +28,9 @@ MAXRESULTS=999999
 
 # 2015: for username in alex7 algot alkarol andygol b108 baditaflorin cartolab cut dmbreaker durko_freemap edjone ghostishev gwin hast ikovaltaras imsamurai ivic4u jan_mapper maxim75 older prudenko sanjak serge serhijdubyk severyndubyk urbalazs velmyshanovnyi vsviridov wiktorn yamaxim yevgeniy8 zvid
 
-for username in hast velmyshanovnyi severyndubyk ivic4u serhijdubyk imsamurai older ghostishev ikovaltaras serge maxim75 b108 sanjak wiktorn cartolab durko_freemap zvid prudenko alexkolodko artem andygol alkarol baditaflorin algot dmbreaker vsviridov a_biatov openihatebot approksimator yurets_zil cut rekrutacja alex7 yevgeniy8 jan_mapper edjone neogame urbalazs yamaxim gwin z-yurets
+# 2015.05.2016 hast velmyshanovnyi severyndubyk ivic4u serhijdubyk imsamurai older ghostishev ikovaltaras serge maxim75 b108 sanjak wiktorn cartolab durko_freemap zvid prudenko alexkolodko artem andygol alkarol baditaflorin algot dmbreaker vsviridov a_biatov openihatebot approksimator yurets_zil cut rekrutacja alex7 yevgeniy8 jan_mapper edjone neogame urbalazs yamaxim gwin z-yurets
+
+for username in hast velmyshanovnyi severyndubyk serhijdubyk ivic4u imsamurai older ghostishev z-yurets ikovaltaras serge blackbird27 maxim75 b108 sanjak wiktorn cartolab durko_freemap zvid prudenko alexkolodko artem andygol alkarol baditaflorin algot dmbreaker vsviridov a_biatov openihatebot approksimator yurets_zil cut rekrutacja alex7 yevgeniy8 jan_mapper edjone neogame urbalazs yamaxim gwin onorua
 
 # zibi-osm z-yurets
 
@@ -85,16 +87,18 @@ do
 done
 
 # download ukraine-latest.osm.pbf from http://download.geofabrik.de site
-#wget -O ${HOME}/osmpa/osmdata/ukraine-latest.osm.pbf "http://download.geofabrik.de/europe/ukraine-latest.osm.pbf" ${HOME}/osmpa/osmdata
+wget -O ${HOME}/osmpa/osmdata/ukraine-latest.osm.pbf "http://download.geofabrik.de/europe/ukraine-latest.osm.pbf" ${HOME}/osmpa/osmdata
 
 # import OpenStreetMap pzf features in database | 10.11.2015 - 2m40s for Ukraine | using imposm3 by olehz
-#osmpa/imposm_olehz/imposm3 import -read osmpa/osmdata/ukraine-latest.osm.pbf -write -cachedir osmpa/cache -connection "postgis://$USER:$PGPASSWORD@$HOST:5432/$DBNAME?sslmode=disable&prefix=NONE" -dbschema-import public -mapping osmpa/mapping.json -diff -srid 4326 -overwritecache
+osmpa/imposm_olehz/imposm3 import -read osmpa/osmdata/ukraine-latest.osm.pbf -write -cachedir osmpa/cache -connection "postgis://$USER:$PGPASSWORD@$HOST:5432/$DBNAME?sslmode=disable&prefix=NONE" -dbschema-import public -mapping osmpa/mapping.json -diff -srid 4326 -overwritecache
 
 # export pzf features to GeoJSON file with simplify 
 #| 10.11.2015 - 1158 features for Ukraine
 #| 10.05.2016 - 1414 features for Ukraine
 #rm -R data/pzf.geojson
-ogr2ogr -nlt POLYGON -f "GeoJSON" data/pzf.geojson PG:"host=$HOST user=$USER dbname=$DBNAME password=$PGPASSWORD" nature_conservation_polygon -simplify 0.0005 -lco COORDINATE_PRECISION=5
+ogr2ogr -nlt POLYGON -f "GeoJSON" data/pzf.geojson PG:"host=$HOST user=$USER dbname=$DBNAME password=$PGPASSWORD" nature_conservation_polygon -simplify 0.00035 -lco COORDINATE_PRECISION=5
+
+ogr2ogr -nlt GEOMETRY -f "GeoJSON" data/photo_point.geojson PG:"host=$HOST user=$USER dbname=$DBNAME password=$PGPASSWORD" data_first_in_np -lco COORDINATE_PRECISION=5 -select geom
 
 # get statistics
 psql -h $HOST -p $PORT -d $DBNAME -U $USER -f psql_query.sql
