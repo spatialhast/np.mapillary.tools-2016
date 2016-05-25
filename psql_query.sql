@@ -12,7 +12,7 @@ ALTER TABLE "union_gpx_data" ALTER COLUMN gpxtime TYPE date USING gpxtime::date;
 --
 -- CREATE 'ncp_buffer' TABLE WITH 20m GEOM BUFFER FROM 'nature_conservation_polygon' TABLE
 DROP TABLE IF EXISTS ncp_buffer;
-CREATE TABLE ncp_buffer AS SELECT a.name, a.boundary, ST_Buffer( ST_Transform(a.geom, utmzone(ST_Centroid(a.geom))), 20) AS geom FROM nature_conservation_polygon a;
+CREATE TABLE ncp_buffer AS SELECT a.name, a.boundary, ST_Buffer( ST_Transform(a.geom, utmzone(ST_Centroid(a.geom))), 40) AS geom FROM nature_conservation_polygon a;
 ALTER TABLE ncp_buffer ALTER COLUMN geom TYPE Geometry(Geometry,4326) USING ST_Transform(geom,4326);
 --
 --
